@@ -4,6 +4,7 @@
   :url "http://example.com/FIXME"
 
   :dependencies [[clj-time "0.14.0"]
+                 [com.h2database/h2 "1.4.193"]
                  [compojure "1.6.0"]
                  [conman "0.6.7"]
                  [cprop "0.1.10"]
@@ -20,7 +21,6 @@
                  [org.clojure/clojurescript "1.9.854" :scope "provided"]
                  [org.clojure/tools.cli "0.3.5"]
                  [org.clojure/tools.logging "0.4.0"]
-                 [org.postgresql/postgresql "42.1.3"]
                  [org.webjars.bower/tether "1.4.0"]
                  [org.webjars/bootstrap "4.0.0-alpha.5"]
                  [org.webjars/font-awesome "4.7.0"]
