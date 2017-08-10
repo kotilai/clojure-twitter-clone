@@ -23,8 +23,8 @@ WHERE id = :id
 -- :name create-tweet! :! :n
 -- :doc creates a new tweet
 INSERT INTO tweet
-(id, user_id, posted_date, reply_to_id, text)
-VALUES (:id, :user_id, :posted_date, :reply_to_id, :text)
+(posted_date, text)
+VALUES (:posted_date, :text)
 
 -- :name update-tweet! :! :n
 -- :doc update an existing tweet
@@ -35,4 +35,13 @@ WHERE id = :id
 -- :name get-tweet :? :1
 -- :doc retrieve a tweet given the id.
 SELECT * FROM tweet
+WHERE id = :id
+
+-- :name get-tweets :? :*
+-- :doc retrieve all tweets.
+SELECT * FROM tweet
+
+-- :name delete-tweet! :! :n
+-- :doc delete a tweet given the id
+DELETE FROM tweet
 WHERE id = :id
