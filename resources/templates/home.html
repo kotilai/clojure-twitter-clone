@@ -1,24 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="row">
-  <div class="col-sm-12">
-    <ul class="messages">
-        {% for tweet in tweets %}
-        <li>
-            <time>{{tweet.posted_date | date:"yyyy-MM-dd HH:mm"}}</time>
-            <p>{{tweet.text}}</p>
-            <form method="POST" action="/delete">
-              {% csrf-field %}
-              <input type="hidden" name="id" value="{{tweet.id}}">
-              <input type="submit" class="btn btn-danger" value="Delete" />
-            </form>
-        </li>
-        {% endfor %}
-    </ul>
-  </div>
-</div>
-
-<div class="row">
   <div class="span12">
     <form method="POST" action="/">
       {% csrf-field %}
@@ -30,10 +12,28 @@
                 name="text">{{text}}</textarea>
       </p>
       {% if errors.text %}
-      <div class="alert alert-danger">{{errors.text | join}}</div>
+      <div class="alert alert-danger">{{errors.text|join}}</div>
       {% endif %}
       <input type="submit" class="btn btn-primary" value="Send" />
     </form>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-12">
+    <ul class="messages">
+        {% for tweet in tweets %}
+        <li>
+            <div>{{tweet.posted_date|date:"dd-MM-yyyy HH:mm"}}</div>
+            <p>{{tweet.text}}</p>
+            <form method="POST" action="/delete">
+              {% csrf-field %}
+              <input type="hidden" name="id" value="{{tweet.id}}">
+              <input type="submit" class="btn btn-danger" value="Delete" />
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
   </div>
 </div>
 {% endblock %}
