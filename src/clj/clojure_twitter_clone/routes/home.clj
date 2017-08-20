@@ -6,7 +6,8 @@
             [clojure.java.io :as io]
             [clojure-twitter-clone.db.core :as db]
             [ring.util.response :refer [redirect]]
-            [struct.core :as st]))
+            [struct.core :as st]
+            [cemerick.friend :as friend]))
 
 ; https://github.com/clj-time/clj-time#clj-timeformat
 ; https://funcool.github.io/struct/latest/#define-your-own-validator
@@ -53,6 +54,6 @@
 
 (defroutes home-routes
   (GET "/" request (home-page request))
-  (POST "/" request (save-tweet! request))
-  (POST "/delete" request (delete-tweet! request))
+  (POST "/" request (friend/authorize #{:user} (save-tweet! request)))
+  (POST "/delete" request (friend/authorize #{:user} (delete-tweet! request)))
   (GET "/about" [] (about-page)))
