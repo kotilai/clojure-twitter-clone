@@ -23,8 +23,8 @@ WHERE id = :id
 -- :name create-tweet! :! :n
 -- :doc creates a new tweet
 INSERT INTO tweet
-(posted_date, text)
-VALUES (:posted_date, :text)
+(posted_date, text, username)
+VALUES (:posted_date, :text, :username)
 
 -- :name update-tweet! :! :n
 -- :doc update an existing tweet

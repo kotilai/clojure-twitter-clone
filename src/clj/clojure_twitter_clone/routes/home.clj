@@ -9,9 +9,6 @@
             [struct.core :as st]
             [cemerick.friend :as friend]))
 
-; https://github.com/clj-time/clj-time#clj-timeformat
-; https://funcool.github.io/struct/latest/#define-your-own-validator
-
 (def tweet-schema
   [[:text st/string
      {:message "Tweet must be 1 - 140 characters"
@@ -20,13 +17,15 @@
 (defn validate-tweet [params]
   (first (st/validate params tweet-schema)))
 
-(defn save-tweet! [{:keys [params]}]
+(defn save-tweet! [{:keys [params] :as request}]
   (if-let [errors (validate-tweet params)]
     (-> (response/found "/")
         (assoc :flash (assoc params :errors errors)))
     (do
       (db/create-tweet!
-        (assoc params :posted_date (java.util.Date.)))
+        (-> params
+          (assoc :posted_date (java.util.Date.))
+          (assoc :username ((friend/current-authentication request) :username))))
       (response/found "/"))))
 
 (def delete-schema
