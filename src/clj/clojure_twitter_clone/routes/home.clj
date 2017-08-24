@@ -42,11 +42,12 @@
       (db/delete-tweet! params)
       (response/found "/"))))
 
-(defn home-page [{:keys [flash]}]
+(defn home-page [{:keys [flash] :as request}]
   (layout/render
    "home.html"
    (merge {:tweets (db/get-tweets)}
-          (select-keys flash [:name :message :errors]))))
+          (select-keys flash [:name :message :errors])
+          {:auth (friend/current-authentication request)})))
 
 (defn about-page []
   (layout/render "about.html"))

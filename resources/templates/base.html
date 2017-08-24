@@ -36,6 +36,17 @@
                       </a>
                   </li>
               </ul>
+              <ul class="nav navbar-nav float-sm-right">
+                {% if auth|empty? %}
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{servlet-context}}/login"><span class="glyphicon glyphicon-log-in"></span>Login</a>
+                  </li>
+                {% else %}
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{servlet-context}}/logout"><span class="glyphicon glyphicon-log-out"></span>Logout</a>
+                  </li>
+                {% endif %}
+              </ul>
           </div>
       </nav>
 
