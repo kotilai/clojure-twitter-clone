@@ -1,23 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="row">
-  <div class="span12">
-    <form method="POST" action="/">
-      {% csrf-field %}
-      <p>
-          Tweet:
-          <textarea class="form-control"
-                rows="4"
-                cols="50"
-                name="text">{{text}}</textarea>
-      </p>
-      {% if errors.text %}
-      <div class="alert alert-danger">{{errors.text|join}}</div>
-      {% endif %}
-      <input type="submit" class="btn btn-primary" value="Send" />
-    </form>
+{% if auth|not-empty %}
+  <div class="row">
+    <div class="span12">
+      <form method="POST" action="/">
+        {% csrf-field %}
+        <p>
+            Tweet:
+            <textarea class="form-control"
+                  rows="4"
+                  cols="50"
+                  name="text">{{text}}</textarea>
+        </p>
+        {% if errors.text %}
+        <div class="alert alert-danger">{{errors.text|join}}</div>
+        {% endif %}
+        <input type="submit" class="btn btn-primary" value="Send" />
+      </form>
+    </div>
   </div>
-</div>
+{% endif %}
 
 <div class="row">
   <div class="col-sm-12">
@@ -26,11 +28,13 @@
         <li>
             <div>{{tweet.posted_date|date:"dd-MM-yyyy HH:mm"}}</div>
             <p>{{tweet.text}}</p>
-            <form method="POST" action="/delete">
-              {% csrf-field %}
-              <input type="hidden" name="id" value="{{tweet.id}}">
-              <input type="submit" class="btn btn-danger" value="Delete" />
-            </form>
+            {% if auth|not-empty %}
+              <form method="POST" action="/delete">
+                {% csrf-field %}
+                <input type="hidden" name="id" value="{{tweet.id}}">
+                <input type="submit" class="btn btn-danger" value="Delete" />
+              </form>
+            {% endif %}
         </li>
         {% endfor %}
     </ul>
