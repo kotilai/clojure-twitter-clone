@@ -49,11 +49,8 @@
           (select-keys flash [:name :message :errors])
           {:auth (friend/current-authentication request)})))
 
-(defn about-page []
-  (layout/render "about.html"))
 
 (defroutes home-routes
   (GET "/" request (home-page request))
   (POST "/" request (friend/authorize #{:user} (save-tweet! request)))
-  (POST "/delete" request (friend/authorize #{:user} (delete-tweet! request)))
-  (GET "/about" [] (about-page)))
+  (POST "/delete" request (friend/authorize #{:user} (delete-tweet! request))))
