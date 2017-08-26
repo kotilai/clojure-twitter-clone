@@ -1,40 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
-{% if auth|not-empty %}
-  <div class="row">
-    <div class="span12">
-      <form method="POST" action="/">
-        {% csrf-field %}
-        <p>
-            Tweet:
-            <textarea class="form-control"
-                  rows="4"
-                  cols="50"
-                  name="text">{{text}}</textarea>
-        </p>
-        {% if errors.text %}
-        <div class="alert alert-danger">{{errors.text|join}}</div>
-        {% endif %}
-        <input type="submit" class="btn btn-primary" value="Send" />
-      </form>
-    </div>
-  </div>
-{% endif %}
 
 <div class="row">
   <div class="col-sm-12">
     <ul class="messages">
-        {% for tweet in tweets %}
+        {% for tweet in tweets|sort-by-reversed:id %}
         <li>
-            <div>{{tweet.posted_date|date:"dd-MM-yyyy HH:mm"}}</div>
+            <div><a href="{{servlet-context}}/{{tweet.username}}"><b>{{tweet.username}}</b></a>
+              {{tweet.posted_date|date:"dd-MM-yyyy HH:mm"}}</div>
             <p>{{tweet.text}}</p>
-            {% if auth|not-empty %}
-              <form method="POST" action="/delete">
-                {% csrf-field %}
-                <input type="hidden" name="id" value="{{tweet.id}}">
-                <input type="submit" class="btn btn-danger" value="Delete" />
-              </form>
-            {% endif %}
         </li>
         {% endfor %}
     </ul>

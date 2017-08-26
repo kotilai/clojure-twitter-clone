@@ -40,6 +40,11 @@ WHERE id = :id
 -- :name get-tweets :? :*
 -- :doc retrieve all tweets.
 SELECT * FROM tweet
+-- :name get-recent-tweets :? :*
+-- :doc retrieve 10 most recent tweets.
+SELECT * FROM tweet
+ORDER BY id ASC
+LIMIT 10
 
 -- :name delete-tweet! :! :n
 -- :doc delete a tweet given the id
