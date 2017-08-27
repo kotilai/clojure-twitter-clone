@@ -4,6 +4,7 @@
             [clojure-twitter-clone.routes.home :refer [home-routes]]
             [clojure-twitter-clone.routes.login :refer [login-routes]]
             [clojure-twitter-clone.routes.user :refer [user-routes]]
+            [clojure-twitter-clone.routes.admin :refer [admin-routes]]
             [compojure.route :as route]
             [clojure-twitter-clone.env :refer [defaults]]
             [mount.core :as mount]
@@ -20,7 +21,12 @@
   "user" {
     :username "user"
     :password (creds/hash-bcrypt "pass")
-    :roles #{:user}}})
+    :roles #{:user}}
+  "admin" {
+    :username "admin"
+    :password (creds/hash-bcrypt "admin")
+    :roles #{:admin}}
+})
 
 (defn authenticate-routes [route-data]
   (friend/authenticate route-data
@@ -31,6 +37,9 @@
   (authenticate-routes
     (routes
       (-> #'login-routes
+          (wrap-routes middleware/wrap-csrf)
+          (wrap-routes middleware/wrap-formats))
+      (-> #'admin-routes
           (wrap-routes middleware/wrap-csrf)
           (wrap-routes middleware/wrap-formats))
       (-> #'home-routes

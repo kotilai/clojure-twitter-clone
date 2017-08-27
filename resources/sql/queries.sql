@@ -1,23 +1,27 @@
 -- :name create-user! :! :n
 -- :doc creates a new user record
-INSERT INTO users
+INSERT INTO user
 (id, first_name, last_name, email, pass)
 VALUES (:id, :first_name, :last_name, :email, :pass)
 
 -- :name update-user! :! :n
 -- :doc update an existing user record
-UPDATE users
+UPDATE user
 SET first_name = :first_name, last_name = :last_name, email = :email
 WHERE id = :id
 
 -- :name get-user :? :1
 -- :doc retrieve a user given the id.
-SELECT * FROM users
+SELECT * FROM user
 WHERE id = :id
+
+-- :name get-all-users :? :*
+-- :doc retrieve all users.
+SELECT * FROM user
 
 -- :name delete-user! :! :n
 -- :doc delete a user given the id
-DELETE FROM users
+DELETE FROM user
 WHERE id = :id
 
 -- :name create-tweet! :! :n
