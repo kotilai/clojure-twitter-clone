@@ -37,9 +37,11 @@ WHERE id = :id
 SELECT * FROM tweet
 WHERE id = :id
 
--- :name get-tweets :? :*
--- :doc retrieve all tweets.
+-- :name get-user-tweets :? :*
+-- :doc retrieve users tweets.
 SELECT * FROM tweet
+WHERE username = :username
+
 -- :name get-recent-tweets :? :*
 -- :doc retrieve 10 most recent tweets.
 SELECT * FROM tweet

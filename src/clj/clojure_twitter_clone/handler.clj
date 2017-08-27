@@ -3,6 +3,7 @@
             [clojure-twitter-clone.layout :refer [error-page]]
             [clojure-twitter-clone.routes.home :refer [home-routes]]
             [clojure-twitter-clone.routes.login :refer [login-routes]]
+            [clojure-twitter-clone.routes.user :refer [user-routes]]
             [compojure.route :as route]
             [clojure-twitter-clone.env :refer [defaults]]
             [mount.core :as mount]
@@ -29,10 +30,13 @@
 (def app-routes
   (authenticate-routes
     (routes
+      (-> #'login-routes
+          (wrap-routes middleware/wrap-csrf)
+          (wrap-routes middleware/wrap-formats))
       (-> #'home-routes
           (wrap-routes middleware/wrap-csrf)
           (wrap-routes middleware/wrap-formats))
-      (-> #'login-routes
+      (-> #'user-routes
           (wrap-routes middleware/wrap-csrf)
           (wrap-routes middleware/wrap-formats))
       (route/not-found
