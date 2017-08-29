@@ -1,5 +1,6 @@
 (ns user
   (:require [mount.core :as mount]
+            [clojure-twitter-clone.figwheel :refer [start-fw stop-fw cljs]]
             clojure-twitter-clone.core))
 
 (defn start []
