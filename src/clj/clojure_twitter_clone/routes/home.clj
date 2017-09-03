@@ -1,15 +1,16 @@
 (ns clojure-twitter-clone.routes.home
   (:require [clojure-twitter-clone.layout :as layout]
             [compojure.core :refer [defroutes GET]]
-            [clojure-twitter-clone.db.core :as db]
-            [cemerick.friend :as friend]))
+            [ring.util.http-response :as response]
+            [clojure.java.io :as io]))
 
-(defn home-page [{:keys [flash] :as request}]
-  (layout/render
-    "home.html"
-    (merge {:tweets (db/get-recent-tweets)}
-      (select-keys flash [:name :message :errors])
-      {:auth (friend/current-authentication request)})))
+(defn home-page []
+  (layout/render "home.html"))
 
 (defroutes home-routes
-  (GET "/" request (home-page request)))
+  (GET "/" []
+       (home-page))
+  (GET "/docs" []
+       (-> (response/ok (-> "docs/docs.md" io/resource slurp))
+           (response/header "Content-Type" "text/plain; charset=utf-8"))))
+

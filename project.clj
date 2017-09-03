@@ -3,24 +3,26 @@
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
 
-  :dependencies [[clj-time "0.14.0"]
-                 [cljs-ajax "0.6.0"]
-                 [com.cemerick/friend "0.2.3"]
+  :dependencies [[buddy "1.3.0"]
+                 [clj-time "0.14.0"]
+                 [cljs-ajax "0.7.2"]
                  [com.h2database/h2 "1.4.196"]
                  [compojure "1.6.0"]
                  [conman "0.6.8"]
                  [cprop "0.1.11"]
                  [funcool/struct "1.0.0"]
                  [luminus-immutant "0.2.3"]
-                 [luminus-migrations "0.4.0"]
+                 [luminus-migrations "0.4.1"]
                  [luminus-nrepl "0.1.4"]
                  [luminus/ring-ttl-session "0.3.2"]
                  [markdown-clj "1.0.0"]
+                 [metosin/compojure-api "1.1.11"]
                  [metosin/muuntaja "0.3.2"]
                  [metosin/ring-http-response "0.9.0"]
                  [mount "0.1.11"]
                  [org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.908" :scope "provided"]
+                 [org.clojure/java.jdbc "0.7.1"]
                  [org.clojure/tools.cli "0.3.5"]
                  [org.clojure/tools.logging "0.4.0"]
                  [org.webjars.bower/tether "1.4.0"]
@@ -45,7 +47,7 @@
   :migratus {:store :database :db ~(get (System/getenv) "DATABASE_URL")}
 
   :plugins [[lein-cprop "1.0.3"]
-            [migratus-lein "0.5.1"]
+            [migratus-lein "0.5.2"]
             [lein-cljsbuild "1.1.5"]
             [lein-immutant "2.1.0"]]
   :clean-targets ^{:protect false}

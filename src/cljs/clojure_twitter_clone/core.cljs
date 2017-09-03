@@ -11,40 +11,35 @@
 
 (defn nav-link [uri title page collapsed?]
   [:li.nav-item
-   {:class (when (= page (session/get :page)) "active")}
-   [:a.nav-link
-    {:href uri
-     :on-click #(reset! collapsed? true)} title]])
+    {:class (when (= page (session/get :page)) "active")}
+    [:a.nav-link
+      {:href uri
+       :on-click #(reset! collapsed? true)} title]])
 
 (defn navbar []
   (let [collapsed? (r/atom true)]
     (fn []
       [:nav.navbar.navbar-dark.bg-primary
-       [:button.navbar-toggler.hidden-sm-up
-        {:on-click #(swap! collapsed? not)} "☰"]
-       [:div.collapse.navbar-toggleable-xs
-        (when-not @collapsed? {:class "in"})
-        [:a.navbar-brand {:href "#/"} "clojure-twitter-clone"]
-        [:ul.nav.navbar-nav
-         [nav-link "#/" "Home" :home collapsed?]
-         [nav-link "#/about" "About" :about collapsed?]]]])))
-
-(defn about-page []
-  [:div.container
-   [:div.row
-    [:div.col-md-12
-     [:img {:src (str js/context "/img/warning_clojure.png")}]]]])
+        [:button.navbar-toggler.hidden-sm-up
+          {:on-click #(swap! collapsed? not)} "☰"]
+        [:div.collapse.navbar-toggleable-xs
+          (when-not @collapsed? {:class "in"})
+          [:a.navbar-brand {:href "#/"} "clojure-twitter-clone"]
+          [:ul.nav.navbar-nav
+            [nav-link "#/" "Home" :home collapsed?]]
+        [:ul.nav.navbar-nav.float-sm-right
+          [nav-link "#/login" "Home" :home collapsed?]
+          [nav-link "#/logout" "About" :about collapsed?]]]])))
 
 (defn home-page []
   [:div.container
    (when-let [docs (session/get :docs)]
      [:div.row>div.col-sm-12
-      [:div {:dangerouslySetInnerHTML
+       [:div {:dangerouslySetInnerHTML
              {:__html (md->html docs)}}]])])
 
 (def pages
-  {:home #'home-page
-   :about #'about-page})
+  {:home #'home-page})
 
 (defn page []
   [(pages (session/get :page))])
@@ -55,9 +50,6 @@
 
 (secretary/defroute "/" []
   (session/put! :page :home))
-
-(secretary/defroute "/about" []
-  (session/put! :page :about))
 
 ;; -------------------------
 ;; History
@@ -72,8 +64,6 @@
 
 ;; -------------------------
 ;; Initialize app
-(defn fetch-docs! []
-  (GET "/docs" {:handler #(session/put! :docs %)}))
 
 (defn mount-components []
   (r/render [#'navbar] (.getElementById js/document "navbar"))
@@ -81,6 +71,5 @@
 
 (defn init! []
   (load-interceptors!)
-  (fetch-docs!)
   (hook-browser-navigation!)
   (mount-components))

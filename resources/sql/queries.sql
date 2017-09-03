@@ -15,6 +15,11 @@ WHERE id = :id
 SELECT * FROM user
 WHERE id = :id
 
+-- :name get-username :? :1
+-- :doc retrieve a user given the id.
+SELECT * FROM user
+WHERE username = :username
+
 -- :name get-all-users :? :*
 -- :doc retrieve all users.
 SELECT * FROM user
