@@ -28,18 +28,31 @@
           [:ul.nav.navbar-nav
             [nav-link "#/" "Home" :home collapsed?]]
         [:ul.nav.navbar-nav.float-sm-right
-          [nav-link "#/login" "Home" :home collapsed?]
-          [nav-link "#/logout" "About" :about collapsed?]]]])))
+          [nav-link "#/login" "Login" :login collapsed?]
+          [nav-link "#/logout" "Logout" :logout collapsed?]]]])))
 
 (defn home-page []
   [:div.container
-   (when-let [docs (session/get :docs)]
-     [:div.row>div.col-sm-12
-       [:div {:dangerouslySetInnerHTML
-             {:__html (md->html docs)}}]])])
+    "Hello World"])
+
+(defn input [name type value]
+  "Simple input component"
+  [:input {
+    :name name
+    :type type
+    :value @value
+    :on-change #(reset! value (-> % .-target .-value))}])
+
+(defn login-page []
+  (let [username (r/atom nil)
+        password (r/atom nil)]
+    [:div.container
+      [input "username" "text" username]
+      [input "password" "password" password]]))
 
 (def pages
-  {:home #'home-page})
+  {:home #'home-page
+   :login #'login-page})
 
 (defn page []
   [(pages (session/get :page))])
@@ -50,6 +63,12 @@
 
 (secretary/defroute "/" []
   (session/put! :page :home))
+
+(secretary/defroute "/login" []
+  (session/put! :page :login))
+
+(secretary/defroute "/logout" []
+  (session/put! :page :logout))
 
 ;; -------------------------
 ;; History
