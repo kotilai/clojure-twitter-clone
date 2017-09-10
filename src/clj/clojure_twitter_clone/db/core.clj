@@ -1,6 +1,6 @@
 (ns clojure-twitter-clone.db.core
   (:require
-    [clj-time.jdbc]
+    ;[clj-time.jdbc]
     [conman.core :as conman]
     [mount.core :refer [defstate]]
     [clojure-twitter-clone.config :refer [env]]))
@@ -10,4 +10,3 @@
            :stop (conman/disconnect! *db*))
 
 (conman/bind-connection *db* "sql/queries.sql")
-

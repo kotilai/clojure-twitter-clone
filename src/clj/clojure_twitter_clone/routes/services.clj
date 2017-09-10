@@ -6,7 +6,8 @@
             [buddy.auth.accessrules :refer [restrict]]
             [buddy.auth :refer [authenticated?]]
             [buddy.hashers :refer [check]]
-            [clojure-twitter-clone.db.core :as db]))
+            [clojure-twitter-clone.db.core :as db]
+            [clojure-twitter-clone.middleware :as middleware]))
 
 (defn access-error [_ _]
   (unauthorized {:error "unauthorized"}))
@@ -22,6 +23,11 @@
 (defmethod restructure-param :current-user
   [_ binding acc]
   (update-in acc [:letks] into [binding `(:identity ~'+compojure-api-request+)]))
+
+(s/defschema Tweet {:id String
+                    :posted_date s/Any
+                    :text String
+                    :username String})
 
 (defapi service-routes
   {:swagger {:ui "/swagger-ui"
@@ -50,33 +56,16 @@
 
   (context "/api" []
     :tags ["thingie"]
+    ;:middleware [middleware/wrap-formats]
 
-    (GET "/plus" []
-      :return       Long
-      :query-params [x :- Long, {y :- Long 1}]
-      :summary      "x+y with query-parameters. y defaults to 1."
-      (ok (+ x y)))
+    (GET "/recent" []
+      :return       [Tweet]
+      :summary      "Returns 10 most recent tweets."
+      ;(ok (convert-posted-date (db/get-recent-tweets))))
+      (ok (db/get-recent-tweets)))
 
     (POST "/minus" []
       :return      Long
       :body-params [x :- Long, y :- Long]
       :summary     "x-y with body-parameters."
-      (ok (- x y)))
-
-    (GET "/times/:x/:y" []
-      :return      Long
-      :path-params [x :- Long, y :- Long]
-      :summary     "x*y with path-parameters"
-      (ok (* x y)))
-
-    (POST "/divide" []
-      :return      Double
-      :form-params [x :- Long, y :- Long]
-      :summary     "x/y with form-parameters"
-      (ok (/ x y)))
-
-    (GET "/power" []
-      :return      Long
-      :header-params [x :- Long, y :- Long]
-      :summary     "x^y with header-parameters"
-      (ok (long (Math/pow x y))))))
+      (ok (- x y)))))

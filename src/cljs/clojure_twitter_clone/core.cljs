@@ -4,7 +4,6 @@
             [secretary.core :as secretary :include-macros true]
             [goog.events :as events]
             [goog.history.EventType :as HistoryEventType]
-            [markdown.core :refer [md->html]]
             [clojure-twitter-clone.ajax :refer [load-interceptors!]]
             [ajax.core :refer [GET POST]])
   (:import goog.History))
@@ -28,15 +27,26 @@
           [:ul.nav.navbar-nav
             [nav-link "#/" "Home" :home collapsed?]]
         [:ul.nav.navbar-nav.float-sm-right
-          [nav-link "#/login" "Home" :home collapsed?]
-          [nav-link "#/logout" "About" :about collapsed?]]]])))
+          [nav-link "#/login" "Login" :home collapsed?]
+          [nav-link "#/logout" "Logout" :about collapsed?]]]])))
+
+(defn fetch-recent-tweets [result]
+  (GET "/api/recent"
+    {:headers {"Accept" "application/transit+json"}
+     :handler #(reset! result %)}))
+
+(defn tweet [content]
+  [:div
+   (:text content)])
 
 (defn home-page []
-  [:div.container
-   (when-let [docs (session/get :docs)]
-     [:div.row>div.col-sm-12
-       [:div {:dangerouslySetInnerHTML
-             {:__html (md->html docs)}}]])])
+  (let [tweets (r/atom nil)]
+    (fetch-recent-tweets tweets)
+    (fn []
+        [:div.container
+        (for [t @tweets]
+          ^{:key (:id t)}
+          [tweet t])])))
 
 (def pages
   {:home #'home-page})
