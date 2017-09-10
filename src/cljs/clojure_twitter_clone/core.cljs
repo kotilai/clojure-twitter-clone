@@ -4,7 +4,6 @@
             [secretary.core :as secretary :include-macros true]
             [goog.events :as events]
             [goog.history.EventType :as HistoryEventType]
-            [markdown.core :refer [md->html]]
             [clojure-twitter-clone.ajax :refer [load-interceptors!]]
             [ajax.core :refer [GET POST]])
   (:import goog.History))
@@ -31,9 +30,23 @@
           [nav-link "#/login" "Login" :login collapsed?]
           [nav-link "#/logout" "Logout" :logout collapsed?]]]])))
 
+(defn fetch-recent-tweets [result]
+  (GET "/api/recent"
+    {:headers {"Accept" "application/transit+json"}
+     :handler #(reset! result %)}))
+
+(defn tweet [content]
+  [:div
+   (:text content)])
+
 (defn home-page []
-  [:div.container
-    "Hello World"])
+  (let [tweets (r/atom nil)]
+    (fetch-recent-tweets tweets)
+    (fn []
+        [:div.container
+        (for [t @tweets]
+          ^{:key (:id t)}
+          [tweet t])])))
 
 (defn input [name type value]
   "Simple input component"
