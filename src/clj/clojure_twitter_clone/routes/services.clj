@@ -25,7 +25,7 @@
   (update-in acc [:letks] into [binding `(:identity ~'+compojure-api-request+)]))
 
 (s/defschema Tweet {:id String
-                    :posted_date s/Any
+                    :posted_date String
                     :text String
                     :username String})
 
@@ -61,7 +61,6 @@
     (GET "/recent" []
       :return       [Tweet]
       :summary      "Returns 10 most recent tweets."
-      ;(ok (convert-posted-date (db/get-recent-tweets))))
       (ok (db/get-recent-tweets)))
 
     (POST "/minus" []

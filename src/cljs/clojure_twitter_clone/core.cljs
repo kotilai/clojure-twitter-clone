@@ -36,8 +36,10 @@
      :handler #(reset! result %)}))
 
 (defn tweet [content]
-  [:div
-   (:text content)])
+  [:div.card
+    [:div.card-body
+      [:h4.card-title (str (:username content) " " (:posted_date content))]
+      [:p.card-text (:text content)]]])
 
 (defn home-page []
   (let [tweets (r/atom nil)]
