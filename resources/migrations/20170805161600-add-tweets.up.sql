@@ -1,5 +1,5 @@
 CREATE TABLE tweet
-(id VARCHAR(20) PRIMARY KEY AUTO_INCREMENT,
+(id BIGSERIAL PRIMARY KEY,
  -- user_id VARCHAR(20),
  posted_date TIMESTAMP,
  -- reply_to_id VARCHAR(20),
