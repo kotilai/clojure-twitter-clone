@@ -24,8 +24,8 @@
   [_ binding acc]
   (update-in acc [:letks] into [binding `(:identity ~'+compojure-api-request+)]))
 
-(s/defschema Tweet {:id String
-                    :posted_date String
+(s/defschema Tweet {:id Long
+                    :posted_date java.sql.Timestamp
                     :text String
                     :username String})
 
@@ -62,6 +62,11 @@
       :return       [Tweet]
       :summary      "Returns 10 most recent tweets."
       (ok (db/get-recent-tweets)))
+
+    (GET "/user/:username" [username]
+      :return       [Tweet]
+      :summary      "Returns users tweets."
+      (ok (db/get-user-tweets {:username username})))
 
     (POST "/minus" []
       :return      Long

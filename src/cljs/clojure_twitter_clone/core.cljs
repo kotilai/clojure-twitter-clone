@@ -1,5 +1,6 @@
 (ns clojure-twitter-clone.core
   (:require [reagent.core :as r]
+            [reagent.format :as format]
             [reagent.session :as session]
             [secretary.core :as secretary :include-macros true]
             [goog.events :as events]
@@ -35,10 +36,15 @@
     {:headers {"Accept" "application/transit+json"}
      :handler #(reset! result %)}))
 
+(defn fetch-user-tweets [username result]
+ (GET (str "/api/user/" username)
+   {:headers {"Accept" "application/transit+json"}
+    :handler #(reset! result %)}))
+
 (defn tweet [content]
   [:div.card
     [:div.card-body
-      [:h4.card-title (str (:username content) " " (:posted_date content))]
+      [:h5.card-title (str (:username content) " " (format/date-format (:posted_date content) "dd.MM.yyyy HH.mm.ss"))]
       [:p.card-text (:text content)]]])
 
 (defn home-page []
@@ -65,9 +71,23 @@
       [input "username" "text" username]
       [input "password" "password" password]]))
 
+(defn user-page []
+  (let [username "user";(js/window -location -pathname)
+        routing-data (session/get :route)
+        tweets (r/atom nil)]
+    (.log js/console username)
+    (.log js/console routing-data)
+    (fetch-user-tweets username tweets)
+    (fn []
+        [:div.container
+        (for [t @tweets]
+          ^{:key (:id t)}
+          [tweet t])])))
+
 (def pages
   {:home #'home-page
-   :login #'login-page})
+   :login #'login-page
+   :user #'user-page})
 
 (defn page []
   [(pages (session/get :page))])
@@ -78,6 +98,9 @@
 
 (secretary/defroute "/" []
   (session/put! :page :home))
+
+(secretary/defroute "/:username" [username]
+  (session/put! :page :user))
 
 (secretary/defroute "/login" []
   (session/put! :page :login))
