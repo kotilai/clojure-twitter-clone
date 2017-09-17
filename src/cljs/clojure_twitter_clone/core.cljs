@@ -37,15 +37,25 @@
      :handler #(reset! result %)}))
 
 (defn fetch-user-tweets [username result]
- (GET (str "/api/user/" username)
+ (GET (str "/api/" username)
    {:headers {"Accept" "application/transit+json"}
     :handler #(reset! result %)}))
 
+(defn send-login [credentials]
+  (POST "/login"
+    {:params credentials
+     }))
+
+(defn format-date [date]
+  (format/date-format date "dd.MM.yyyy HH.mm.ss"))
+
 (defn tweet [content]
+  (let [username (:username content)
+        date (format-date (:posted_date content))]
   [:div.card
     [:div.card-body
-      [:h5.card-title (str (:username content) " " (format/date-format (:posted_date content) "dd.MM.yyyy HH.mm.ss"))]
-      [:p.card-text (:text content)]]])
+      [:h5.card-title (str username " " date)]
+      [:p.card-text (:text content)]]]))
 
 (defn home-page []
   (let [tweets (r/atom nil)]
@@ -69,7 +79,9 @@
         password (r/atom nil)]
     [:div.container
       [input "username" "text" username]
-      [input "password" "password" password]]))
+      [input "password" "password" password]
+      [:input {:type "button" :value "Login"
+       :on-click #(send-login {:username @username :password @password})}]]))
 
 (defn user-page []
   (let [username "user";(js/window -location -pathname)
@@ -99,14 +111,14 @@
 (secretary/defroute "/" []
   (session/put! :page :home))
 
-(secretary/defroute "/:username" [username]
-  (session/put! :page :user))
-
 (secretary/defroute "/login" []
   (session/put! :page :login))
 
 (secretary/defroute "/logout" []
   (session/put! :page :logout))
+
+(secretary/defroute "/:username" [username]
+  (session/put! :page :user))
 
 ;; -------------------------
 ;; History

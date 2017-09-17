@@ -63,13 +63,7 @@
       :summary      "Returns 10 most recent tweets."
       (ok (db/get-recent-tweets)))
 
-    (GET "/user/:username" [username]
+    (GET "/:username" [username]
       :return       [Tweet]
       :summary      "Returns users tweets."
-      (ok (db/get-user-tweets {:username username})))
-
-    (POST "/minus" []
-      :return      Long
-      :body-params [x :- Long, y :- Long]
-      :summary     "x-y with body-parameters."
-      (ok (- x y)))))
+      (ok (db/get-user-tweets {:username username})))))
