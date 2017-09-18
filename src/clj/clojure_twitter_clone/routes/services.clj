@@ -5,7 +5,7 @@
             [compojure.api.meta :refer [restructure-param]]
             [buddy.auth.accessrules :refer [restrict]]
             [buddy.auth :refer [authenticated?]]
-            [buddy.hashers :refer [check]]
+            [buddy.hashers :refer [check derive]]
             [clojure-twitter-clone.db.core :as db]
             [clojure-twitter-clone.middleware :as middleware]))
 
@@ -24,10 +24,24 @@
   [_ binding acc]
   (update-in acc [:letks] into [binding `(:identity ~'+compojure-api-request+)]))
 
+(s/defschema User {:id Long
+                    :username String
+                    :first_name String
+                    :last_name String})
+
 (s/defschema Tweet {:id Long
                     :posted_date java.sql.Timestamp
                     :text String
                     :username String})
+
+(defn create-user [user]
+  (println "Creating user"))
+
+(defn update-user [user]
+  (println "Updating user"))
+
+(defn delete-user [id]
+  (println "Deleting user"))
 
 (defapi service-routes
   {:swagger {:ui "/swagger-ui"
@@ -66,4 +80,28 @@
     (GET "/:username" [username]
       :return       [Tweet]
       :summary      "Returns users tweets."
-      (ok (db/get-user-tweets {:username username})))))
+      (ok (db/get-user-tweets {:username username}))))
+
+    (context "/admin" []
+      (GET "/users" []
+        :return       [User]
+        :summary      "Returns all users"
+        (ok (db/get-all-users)))
+
+      (POST "/user" []
+        :body-params [user :- User]
+        :return       User
+        :summary      "Create a user"
+        (ok (create-user user)))
+
+      (PUT "/user" []
+        :body-params [user :- User]
+        :return       User
+        :summary      "Update a user"
+        (ok (update-user user)))
+
+      (DELETE "/user" []
+        :body-params [id :- Long]
+        :summary      "Delete a user"
+        (ok (delete-user id)))
+      ))
