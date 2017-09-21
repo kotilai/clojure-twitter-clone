@@ -27,7 +27,12 @@
 (s/defschema User {:id Long
                     :username String
                     :first_name String
-                    :last_name String})
+                    :last_name String
+                    (s/optional-key :email) String
+                    (s/optional-key :admin) Boolean
+                    (s/optional-key :last_login) java.sql.Timestamp
+                    (s/optional-key :is_active) Boolean
+                    (s/optional-key :pass) String})
 
 (s/defschema Tweet {:id Long
                     :posted_date java.sql.Timestamp
