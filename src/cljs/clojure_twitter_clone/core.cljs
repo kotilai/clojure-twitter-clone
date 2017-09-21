@@ -41,6 +41,11 @@
    {:headers {"Accept" "application/transit+json"}
     :handler #(reset! result %)}))
 
+(defn fetch-users [result]
+ (GET "/admin/users"
+   {:headers {"Accept" "application/transit+json"}
+    :handler #(reset! result %)}))
+
 (defn send-login [credentials]
   (POST "/login"
     {:params credentials
@@ -74,6 +79,12 @@
     :value @value
     :on-change #(reset! value (-> % .-target .-value))}])
 
+(defn button [text on-click]
+  [:input {
+    :type "button"
+    :value text
+    :on-click on-click}])
+
 (defn login-page []
   (let [username (r/atom nil)
         password (r/atom nil)]
@@ -96,9 +107,34 @@
           ^{:key (:id t)}
           [tweet t])])))
 
+(defn user [{:keys [first_name last_name username]}]
+  [:tr
+    [:td first_name]
+    [:td last_name]
+    [:td username]
+    [:td
+      [button "Edit" #(println "Clicked")]]])
+
+(defn admin-page []
+  (let [users (r/atom nil)]
+    (fetch-users users)
+    (fn []
+        [:table.table
+          [:thead
+            [:tr
+              [:td "First name"]
+              [:td "Last name"]
+              [:td "Username"]
+              [:td]]]
+          [:tbody
+            (for [u @users]
+              ^{:key (:id u)}
+              [user u])]])))
+
 (def pages
   {:home #'home-page
    :login #'login-page
+   :admin #'admin-page
    :user #'user-page})
 
 (defn page []
@@ -116,6 +152,9 @@
 
 (secretary/defroute "/logout" []
   (session/put! :page :logout))
+
+(secretary/defroute "/admin" []
+  (session/put! :page :admin))
 
 (secretary/defroute "/:username" [username]
   (session/put! :page :user))
