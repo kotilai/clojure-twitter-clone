@@ -32,6 +32,7 @@
                     :admin (s/maybe Boolean)
                     :last_login (s/maybe java.sql.Timestamp)
                     :is_active (s/maybe Boolean)
+                    :password_strength (s/maybe (s/enum "WEAK" "AVERAGE" "STRONG"))
                     :pass (s/maybe String)})
 
 (s/defschema Tweet {:id Long
