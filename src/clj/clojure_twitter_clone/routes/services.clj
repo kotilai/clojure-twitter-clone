@@ -28,11 +28,11 @@
                     :username String
                     :first_name String
                     :last_name String
-                    (s/optional-key :email) String
-                    (s/optional-key :admin) Boolean
-                    (s/optional-key :last_login) java.sql.Timestamp
-                    (s/optional-key :is_active) Boolean
-                    (s/optional-key :pass) String})
+                    :email (s/maybe String)
+                    :admin (s/maybe Boolean)
+                    :last_login (s/maybe java.sql.Timestamp)
+                    :is_active (s/maybe Boolean)
+                    :pass (s/maybe String)})
 
 (s/defschema Tweet {:id Long
                     :posted_date java.sql.Timestamp
