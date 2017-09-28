@@ -1,5 +1,5 @@
 (ns clojure-twitter-clone.components.tweet
-  (:require [reagent.core :as format]))
+  (:require [reagent.format :as format]))
 
 (defn format-date [date]
   (format/date-format date "dd.MM.yyyy HH.mm.ss"))

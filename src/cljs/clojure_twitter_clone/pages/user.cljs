@@ -20,4 +20,4 @@
         [:div.container
         (for [t @tweets]
           ^{:key (:id t)}
-          [tweet t])])))
+          [tweet/tweet t])])))
