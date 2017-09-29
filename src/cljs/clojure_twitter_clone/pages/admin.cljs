@@ -10,6 +10,13 @@
 (defn add-user [users]
   (conj users {:first_name nil :last_name nil :username nil :is_active false}))
 
+(defn strength-badge [strength]
+  (let [[text class] (case strength
+                        "STRONG" ["Strong" "badge-success"]
+                        "AVERAGE" ["Average" "badge-warning"]
+                        "WEAK" ["Weak" "badge-danger"])]
+    [:span.badge {:class class} text]))
+
 (defn user [{:keys [username
                     first_name
                     last_name
@@ -22,9 +29,9 @@
     [:td first_name]
     [:td last_name]
     [:td email]
-    [:td password_strength]]) ; label
     [:td (if is_admin [:i.fa.fa-check])]
     [:td (if is_active [:i.fa.fa-check])]
+    [:td (strength-badge password_strength)]])
 
 (defn admin-page []
   (let [users (r/atom nil)]
