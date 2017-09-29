@@ -22,17 +22,17 @@
     [:td first_name]
     [:td last_name]
     [:td email]
-    [:td (if is_admin [:i.glyphicon.glyphicon-ok])]
-    [:td (if is_active [:i.glyphicon.glyphicon-ok])]
     [:td password_strength]]) ; label
+    [:td (if is_admin [:i.fa.fa-check])]
+    [:td (if is_active [:i.fa.fa-check])]
 
 (defn admin-page []
   (let [users (r/atom nil)]
     (fetch-users users)
     (fn []
       [:div.container
-        [:button {:on-click #(.log js/console "Clicked add")}
-          [:i.glyphicon.glyphicon-plus]]
+        [:button.btn.btn-success {:on-click #(.log js/console "Clicked add")}
+          [:i.fa.fa-plus]]
         [:table.table
           [:thead
             [:tr
