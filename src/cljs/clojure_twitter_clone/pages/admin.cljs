@@ -12,10 +12,10 @@
 
 (defn strength-badge [strength]
   (let [[text class] (case strength
-                        "STRONG" ["Strong" "badge-success"]
-                        "AVERAGE" ["Average" "badge-warning"]
-                        "WEAK" ["Weak" "badge-danger"])]
-    [:span.badge {:class class} text]))
+                        "STRONG" ["Strong" "tag-success"]
+                        "AVERAGE" ["Average" "tag-warning"]
+                        "WEAK" ["Weak" "tag-danger"])]
+    [:span.tag {:class class} text]))
 
 (defn user [{:keys [username
                     first_name
