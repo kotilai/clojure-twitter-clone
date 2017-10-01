@@ -7,3 +7,10 @@
     :type type
     :value @value
     :on-change #(reset! value (-> % .-target .-value))}])
+
+(defn checkbox [value]
+  (let []
+  [:input.toggle {
+    :type "checkbox"
+    :checked done
+    :on-change #(swap! value)}]))
