@@ -5,7 +5,7 @@
             [compojure.api.meta :refer [restructure-param]]
             [buddy.auth.accessrules :refer [restrict]]
             [buddy.auth :refer [authenticated?]]
-            [buddy.hashers :refer [check derive]]
+            [buddy.hashers :refer [check]]
             [clojure-twitter-clone.db.core :as db]
             [clojure-twitter-clone.middleware :as middleware]))
 
