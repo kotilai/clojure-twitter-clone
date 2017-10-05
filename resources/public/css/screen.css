@@ -67,3 +67,6 @@ body {
     }
 }
 
+.user-row-edit input {
+	width: 100px;
+}
