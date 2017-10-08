@@ -94,6 +94,11 @@
         :summary      "Returns all users"
         (ok (db/get-all-users)))
 
+      (GET "/user/:username" [username]
+        :return       User
+        :summary      "Returns a user"
+        (ok (db/get-username {:username username})))
+
       (POST "/user" []
         :body-params [user :- User]
         :return       User
@@ -106,7 +111,7 @@
         :summary      "Update a user"
         (ok (update-user user)))
 
-      (DELETE "/user" []
+      (DELETE "/user/" []
         :body-params [id :- Long]
         :summary      "Delete a user"
         (ok (delete-user id)))

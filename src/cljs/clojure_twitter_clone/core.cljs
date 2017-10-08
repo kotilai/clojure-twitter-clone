@@ -6,6 +6,7 @@
             [goog.history.EventType :as HistoryEventType]
             [clojure-twitter-clone.ajax :refer [load-interceptors!]]
             [clojure-twitter-clone.pages.admin :as admin]
+            [clojure-twitter-clone.pages.admin-user :as admin-user]
             [clojure-twitter-clone.pages.base :as base]
             [clojure-twitter-clone.pages.home :as home]
             [clojure-twitter-clone.pages.login :as login]
@@ -17,6 +18,7 @@
   {:home #'home/home-page
    :login #'login/login-page
    :admin #'admin/admin-page
+   :admin-user #'admin-user/admin-user-page
    :user #'user/user-page})
 
 (defn page []
@@ -37,6 +39,9 @@
 
 (secretary/defroute "/admin" []
   (session/put! :page :admin))
+
+(secretary/defroute "/admin/:username" []
+  (session/put! :page :admin-user))
 
 (secretary/defroute "/:username" [username]
   (session/put! :page :user))

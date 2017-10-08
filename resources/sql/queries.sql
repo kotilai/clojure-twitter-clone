@@ -16,7 +16,7 @@ SELECT * FROM system_user
 WHERE id = :id
 
 -- :name get-username :? :1
--- :doc retrieve a user given the id.
+-- :doc retrieve a user given the username.
 SELECT * FROM system_user
 WHERE username = :username
 
