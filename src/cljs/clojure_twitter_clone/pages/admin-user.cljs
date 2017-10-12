@@ -20,9 +20,12 @@
  (DELETE "/admin/user"
    {:params id}))
 
+(defn cancel-user-edit []
+ (set! (.-hash js/window.location) "/admin"))
+
 (defn get-url-param []
   (->
-    (.. js/window -location -hash)
+    (.-hash js/window.location)
     (clojure.string/split #"/")
     last))
 
@@ -55,30 +58,33 @@
     [:div.form-group.row
       [:div.offset-sm-2.col-sm-10
         [:button.btn.btn-outline-success.mr-1
-          {:on-click #(.log js/console "save")}
+          {:on-click save}
           "Save"]
         [:button.btn.btn-outline-danger.mr-1
-          {:on-click #(.log js/console "remove")}
+          {:on-click delete}
           "Remove"]
         [:button.btn.btn-outline-secondary
-          {:on-click #(.log js/console "cancel")}
+          {:on-click cancel-user-edit}
           "Cancel"]]]])
 
 (defn user-form [user]
   (let [creating? (contains? @user :id)
-        save #(create-user @user)
-        delete #(delete-user (:id @user))
-        form-template (build-form save delete)
-        title (if creating?
-                "Edit user"
-                "Create user")]
+        [save delete title] (if creating?
+                              [#(create-user @user) cancel-user-edit "Edit user"]
+                              [#(update-user @user) #(delete-user (:id @user)) "Create user"])
+        form-template (build-form save delete)]
     [:div.container
       [:h1 title]
       [bind-fields form-template user]]))
 
-(defn admin-user-page []
+(defn edit-page []
   (let [username (get-url-param)
         user (r/atom nil)]
     (fetch-user username user)
+    (fn []
+      [user-form user])))
+
+(defn new-page []
+  (let [user (r/atom nil)]
     (fn []
       [user-form user])))
