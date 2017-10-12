@@ -41,13 +41,15 @@
                     :username String})
 
 (defn create-user [user]
-  (println "Creating user"))
+  (db/create-user! user)
+  (db/get-username user))
 
 (defn update-user [user]
-  (println "Updating user"))
+  (db/update-user! user)
+  (db/get-username user))
 
 (defn delete-user [id]
-  (println "Deleting user"))
+  (db/delete-user! {:id id}))
 
 (defapi service-routes
   {:swagger {:ui "/swagger-ui"
