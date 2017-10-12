@@ -6,7 +6,13 @@
 (defn fetch-user [username user]
  (GET (str "/admin/user/" username)
    {:headers {"Accept" "application/transit+json"}
-    :handler #(reset! user %)}))
+    :handler #(reset! user (select-keys % [:id
+                                           :username
+                                           :first_name
+                                           :last_name
+                                           :email
+                                           :admin
+                                           :is_active]))}))
 
 (defn create-user [user]
  (POST "/admin/user"
@@ -85,6 +91,11 @@
       [user-form user])))
 
 (defn new-page []
-  (let [user (r/atom nil)]
+  (let [user (r/atom {:username nil
+                      :first_name nil
+                      :last_name nil
+                      :email nil
+                      :admin false
+                      :is_active true})]
     (fn []
       [user-form user])))

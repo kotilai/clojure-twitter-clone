@@ -24,15 +24,23 @@
   [_ binding acc]
   (update-in acc [:letks] into [binding `(:identity ~'+compojure-api-request+)]))
 
-(s/defschema User {:id Long
-                    :username String
-                    :first_name String
-                    :last_name String
-                    :email (s/maybe String)
-                    :admin (s/maybe Boolean)
-                    :last_login (s/maybe java.sql.Timestamp)
-                    :is_active (s/maybe Boolean)
-                    :pass (s/maybe String)})
+(s/defschema User-out {:id Long
+                       :username String
+                       :first_name String
+                       :last_name String
+                       :email String
+                       :admin Boolean
+                       :last_login (s/maybe java.sql.Timestamp)
+                       :is_active Boolean})
+
+(s/defschema User-in {(s/optional-key :id) Long
+                      :username String
+                      :first_name String
+                      :last_name String
+                      :email String
+                      :admin Boolean
+                      :is_active Boolean
+                      (s/optional-key :pass) (s/maybe String)})
 
 (s/defschema Tweet {:id Long
                     :posted_date java.sql.Timestamp
@@ -91,24 +99,24 @@
 
     (context "/admin" []
       (GET "/users" []
-        :return       [User]
+        :return       [User-out]
         :summary      "Returns all users"
         (ok (db/get-all-users)))
 
       (GET "/user/:username" [username]
-        :return       User
+        :return       User-out
         :summary      "Returns a user"
         (ok (db/get-username {:username username})))
 
       (POST "/user" []
-        :body [user User]
-        :return       User
+        :body [user User-in]
+        :return       User-out
         :summary      "Create a user"
         (ok (create-user user)))
 
       (PUT "/user" []
-        :body [user User]
-        :return       User
+        :body [user User-in]
+        :return       User-out
         :summary      "Update a user"
         (ok (update-user user)))
 

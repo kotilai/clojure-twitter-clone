@@ -17,19 +17,19 @@ WHERE id = :id
 
 -- :name get-user :? :1
 -- :doc retrieve a user given the id.
-SELECT id, username, first_name, last_name , email, admin, is_active
+SELECT id, username, first_name, last_name , email, admin, last_login, is_active
 FROM system_user
 WHERE id = :id
 
 -- :name get-username :? :1
 -- :doc retrieve a user given the username.
-SELECT id, username, first_name, last_name , email, admin, is_active
+SELECT id, username, first_name, last_name , email, admin, last_login, is_active
 FROM system_user
 WHERE username = :username
 
 -- :name get-all-users :? :*
 -- :doc retrieve all users.
-SELECT id, username, first_name, last_name , email, admin, is_active
+SELECT id, username, first_name, last_name , email, admin, last_login, is_active
 FROM system_user
 
 -- :name delete-user! :! :n
