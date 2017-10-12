@@ -7,13 +7,6 @@
     {:headers {"Accept" "application/transit+json"}
      :handler #(reset! users %)}))
 
-(defn strength-badge [strength]
-  (let [[text class] (case strength
-                        "STRONG" ["Strong" "tag-success"]
-                        "AVERAGE" ["Average" "tag-warning"]
-                        "WEAK" ["Weak" "tag-danger"])]
-    [:span.tag {:class class} text]))
-
 (defn user-row [{:keys [username
                         first_name
                         last_name
@@ -27,7 +20,6 @@
     [:td email]
     [:td (if is_admin [:i.fa.fa-check])]
     [:td (if is_active [:i.fa.fa-check])]
-    [:td (strength-badge "WEAK")]
     [:td [:a {:href (str "#/admin/" username)} [:i.fa.fa-pencil]]]])
 
 (defn user-table [users]
@@ -40,7 +32,6 @@
         [:td "Email"]
         [:td "Is admin"]
         [:td "Is active"]
-        [:td "Password"]
         [:td]]]
     [:tbody
       (for [u @users]
