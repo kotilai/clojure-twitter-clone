@@ -102,19 +102,19 @@
         (ok (db/get-username {:username username})))
 
       (POST "/user" []
-        :body-params [user :- User]
+        :body [user User]
         :return       User
         :summary      "Create a user"
         (ok (create-user user)))
 
       (PUT "/user" []
-        :body-params [user :- User]
+        :body [user User]
         :return       User
         :summary      "Update a user"
         (ok (update-user user)))
 
-      (DELETE "/user/" []
-        :body-params [id :- Long]
+      (DELETE "/user" []
+        :body [id Long]
         :summary      "Delete a user"
         (ok (delete-user id)))
       ))
