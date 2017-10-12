@@ -18,7 +18,8 @@
   {:home #'home/home-page
    :login #'login/login-page
    :admin #'admin/admin-page
-   :admin-user #'admin-user/admin-user-page
+   :admin-new-user #'admin-user/new-page
+   :admin-edit-user #'admin-user/edit-page
    :user #'user/user-page})
 
 (defn page []
@@ -40,8 +41,11 @@
 (secretary/defroute "/admin" []
   (session/put! :page :admin))
 
+(secretary/defroute "/admin/new" []
+  (session/put! :page :admin-new-user))
+
 (secretary/defroute "/admin/:username" []
-  (session/put! :page :admin-user))
+  (session/put! :page :admin-edit-user))
 
 (secretary/defroute "/:username" [username]
   (session/put! :page :user))
