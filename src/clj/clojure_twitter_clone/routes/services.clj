@@ -5,7 +5,7 @@
             [compojure.api.meta :refer [restructure-param]]
             [buddy.auth.accessrules :refer [restrict]]
             [buddy.auth :refer [authenticated?]]
-            [buddy.hashers :refer [check]]
+            [buddy.hashers :refer [check encrypt]]
             [clojure-twitter-clone.db.core :as db]
             [clojure-twitter-clone.middleware :as middleware]))
 
@@ -24,36 +24,42 @@
   [_ binding acc]
   (update-in acc [:letks] into [binding `(:identity ~'+compojure-api-request+)]))
 
-(s/defschema User-out {:id Long
-                       :username String
-                       :first_name String
-                       :last_name String
-                       :email String
-                       :admin Boolean
-                       :last_login (s/maybe java.sql.Timestamp)
-                       :is_active Boolean})
-
-(s/defschema User-in {(s/optional-key :id) Long
-                      :username String
-                      :first_name String
-                      :last_name String
-                      :email String
-                      :admin Boolean
-                      :is_active Boolean
-                      (s/optional-key :pass) (s/maybe String)})
+(s/defschema User {(s/optional-key :id) Long
+                   :username String
+                   :first_name String
+                   :last_name String
+                   :email String
+                   :admin Boolean
+                   :is_active Boolean
+                   (s/optional-key :last_login) (s/maybe java.sql.Timestamp)
+                   (s/optional-key :password) (s/maybe String)
+                   (s/optional-key :password_confirm) (s/maybe String)})
 
 (s/defschema Tweet {:id Long
                     :posted_date java.sql.Timestamp
                     :text String
                     :username String})
 
+(defn sanitize-user [user]
+  (dissoc user :password))
+
+(defn get-all-users []
+  (map sanitize-user (db/get-all-users)))
+
+(defn get-user [user]
+  (sanitize-user (db/get-username user)))
+
+(defn do-user [user f]
+  (f user)
+  (if (contains? user :password)
+    (db/update-user-password! (update user :password encrypt)))
+  (get-user user))
+
 (defn create-user [user]
-  (db/create-user! user)
-  (db/get-username user))
+  (do-user user db/create-user!))
 
 (defn update-user [user]
-  (db/update-user! user)
-  (db/get-username user))
+  (do-user user db/update-user!))
 
 (defn delete-user [id]
   (db/delete-user! {:id id}))
@@ -68,15 +74,18 @@
   (POST "/login" []
     :body-params [username :- String, password :- String]
     :summary "Logs a user in and start session"
-    (let [user (db/get-username username)]
-      (if (check password (:pass user))
-        (assoc-in (ok {}) [:session :identity] {:username (:username user)})
-        (assoc-in (forbidden) [:session :identity] nil))))
+    (let [user (db/get-user-password {:username username})
+          no #(assoc-in (forbidden) [:session] nil)]
+      (if user
+        (if (check password (:password user))
+          (assoc-in (ok {}) [:session :identity] {:username (:username user)})
+          (no))
+        (no))))
 
   (POST "/logout" []
     :auth-rules authenticated?
     :summary "End users session"
-    (assoc (ok) [:session :identity] nil))
+    (assoc (ok) :session nil))
 
   (GET "/authenticated" []
     :auth-rules authenticated?
@@ -99,24 +108,24 @@
 
     (context "/admin" []
       (GET "/users" []
-        :return       [User-out]
+        :return       [User]
         :summary      "Returns all users"
-        (ok (db/get-all-users)))
+        (ok (get-all-users)))
 
       (GET "/user/:username" [username]
-        :return       User-out
+        :return       User
         :summary      "Returns a user"
-        (ok (db/get-username {:username username})))
+        (ok (get-user {:username username})))
 
       (POST "/user" []
-        :body [user User-in]
-        :return       User-out
+        :body [user User]
+        :return       User
         :summary      "Create a user"
         (ok (create-user user)))
 
       (PUT "/user" []
-        :body [user User-in]
-        :return       User-out
+        :body [user User]
+        :return       User
         :summary      "Update a user"
         (ok (update-user user)))
 

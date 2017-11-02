@@ -13,7 +13,7 @@
                                            :email
                                            :admin
                                            :is_active]))}))
-
+                                           
 (defn create-user [user]
  (POST "/admin/user"
    {:params user}))
@@ -74,10 +74,10 @@
           "Cancel"]]]])
 
 (defn user-form [user]
-  (let [creating? (contains? @user :id)
-        [save delete title] (if creating?
-                              [#(create-user @user) cancel-user-edit "Edit user"]
-                              [#(update-user @user) #(delete-user (:id @user)) "Create user"])
+  (let [editing? (contains? @user :id)
+        [save delete title] (if editing?
+                              [#(update-user @user) #(delete-user (:id @user)) "Edit user"]
+                              [#(create-user @user) cancel-user-edit "Create user"])
         form-template (build-form save delete)]
     [:div.container
       [:h1 title]

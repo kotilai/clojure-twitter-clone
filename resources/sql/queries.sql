@@ -1,8 +1,14 @@
 -- :name create-user! :! :n
 -- :doc creates a new user record
 INSERT INTO system_user
-(username, first_name, last_name, email, admin, is_active, pass)
-VALUES (:username, :first_name, :last_name, :email, :admin, :is_active, :pass)
+(username, first_name, last_name, email, admin, is_active)
+VALUES (:username, :first_name, :last_name, :email, :admin, :is_active)
+
+-- :name update-user-password! :! :n
+-- :doc update an existing users password
+UPDATE system_user
+SET password = :password
+WHERE username = :username
 
 -- :name update-user! :! :n
 -- :doc update an existing user record
@@ -24,6 +30,12 @@ WHERE id = :id
 -- :name get-username :? :1
 -- :doc retrieve a user given the username.
 SELECT id, username, first_name, last_name , email, admin, last_login, is_active
+FROM system_user
+WHERE username = :username
+
+-- :name get-user-password :? :1
+-- :doc retrieve a user given the username.
+SELECT id, username, password
 FROM system_user
 WHERE username = :username
 
