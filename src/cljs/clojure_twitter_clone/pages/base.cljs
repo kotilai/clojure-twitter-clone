@@ -1,6 +1,12 @@
 (ns clojure-twitter-clone.pages.base
   (:require [reagent.core :as r]
-            [reagent.session :as session]))
+            [reagent.session :as session]
+            [clojure-twitter-clone.utils.auth :as auth]))
+
+(defn nav-logout []
+  [:li.nav-item
+    [:button.nav-link.btn.btn-link
+      {:on-click auth/logout} "Logout"]])
 
 (defn nav-link [uri title page collapsed?]
   [:li.nav-item
@@ -10,7 +16,8 @@
        :on-click #(reset! collapsed? true)} title]])
 
 (defn navbar []
-  (let [collapsed? (r/atom true)]
+  (let [collapsed? (r/atom true)
+        authenticated? (auth/is-authenticated)]
     (fn []
       [:nav.navbar.navbar-dark.bg-primary
         [:button.navbar-toggler.hidden-sm-up
@@ -21,5 +28,6 @@
           [:ul.nav.navbar-nav
             [nav-link "#/" "Home" :home collapsed?]]
         [:ul.nav.navbar-nav.float-sm-right
-          [nav-link "#/login" "Login" :login collapsed?]
-          [nav-link "#/logout" "Logout" :logout collapsed?]]]])))
+          (if authenticated?
+            [nav-logout]
+            [nav-link "#/login" "Login" :login collapsed?])]]])))

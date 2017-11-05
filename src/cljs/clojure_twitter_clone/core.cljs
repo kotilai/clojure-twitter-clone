@@ -35,9 +35,6 @@
 (secretary/defroute "/login" []
   (session/put! :page :login))
 
-(secretary/defroute "/logout" []
-  (session/put! :page :logout))
-
 (secretary/defroute "/admin" []
   (session/put! :page :admin))
 

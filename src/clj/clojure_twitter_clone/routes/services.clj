@@ -74,13 +74,10 @@
   (POST "/login" []
     :body-params [username :- String, password :- String]
     :summary "Logs a user in and start session"
-    (let [user (db/get-user-password {:username username})
-          no #(assoc-in (forbidden) [:session] nil)]
-      (if user
-        (if (check password (:password user))
-          (assoc-in (ok {}) [:session :identity] {:username (:username user)})
-          (no))
-        (no))))
+    (let [user (db/get-user-password {:username username})]
+      (if (and user (check password (:password user)))
+        (assoc-in (ok {}) [:session :identity] {:username (:username user)})
+        (assoc (forbidden) :session nil))))
 
   (POST "/logout" []
     :auth-rules authenticated?
