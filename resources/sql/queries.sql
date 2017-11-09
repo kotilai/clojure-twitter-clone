@@ -49,11 +49,12 @@ FROM system_user
 DELETE FROM system_user
 WHERE id = :id
 
--- :name create-tweet! :! :n
+-- :name create-tweet! :<! :1
 -- :doc creates a new tweet
 INSERT INTO tweet
 (posted_date, text, username)
 VALUES (:posted_date, :text, :username)
+RETURNING id;
 
 -- :name update-tweet! :! :n
 -- :doc update an existing tweet

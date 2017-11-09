@@ -35,10 +35,10 @@
                    (s/optional-key :password) (s/maybe String)
                    (s/optional-key :password_confirm) (s/maybe String)})
 
-(s/defschema Tweet {:id Long
-                    :posted_date java.sql.Timestamp
+(s/defschema Tweet {(s/optional-key :id) Long
+                    (s/optional-key :posted_date) java.sql.Timestamp
                     :text String
-                    :username String})
+                    (s/optional-key :username) String})
 
 (defn sanitize-user [user]
   (dissoc user :password))
@@ -63,6 +63,18 @@
 
 (defn delete-user [id]
   (db/delete-user! {:id id}))
+
+(defn get-time []
+  (->
+    (java.util.Date.)
+    (.getTime)
+    (java.sql.Timestamp.)))
+
+(defn create-tweet [tweet]
+  (->
+    tweet
+    (db/create-tweet!)
+    (db/get-tweet)))
 
 (defapi service-routes
   {:swagger {:ui "/swagger-ui"
@@ -101,7 +113,19 @@
     (GET "/:username" [username]
       :return       [Tweet]
       :summary      "Returns users tweets."
-      (ok (db/get-user-tweets {:username username}))))
+      (ok (db/get-user-tweets {:username username})))
+
+    (POST "/:username" [username]
+      :auth-rules authenticated?
+      :current-user user
+      :body [tweet Tweet]
+      :return Tweet
+      :summary "Creates a new tweet."
+      (-> tweet
+        (assoc :posted_date (get-time))
+        (assoc :username (:username user))
+        (create-tweet)
+        (ok))))
 
     (context "/admin" []
       (GET "/users" []
