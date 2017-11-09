@@ -28,6 +28,6 @@
           [:ul.nav.navbar-nav
             [nav-link "#/" "Home" :home collapsed?]]
         [:ul.nav.navbar-nav.float-sm-right
-          (if authenticated?
+          (if @authenticated?
             [nav-logout]
             [nav-link "#/login" "Login" :login collapsed?])]]])))

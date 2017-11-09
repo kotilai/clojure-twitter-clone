@@ -13,10 +13,3 @@
 
 (defn pass [name value]
   [input name "password" value])
-
-(defn checkbox [name value]
-  [:input.toggle {
-    :name name
-    :type "checkbox"
-    :checked done
-    :on-change #(swap! value)}])
