@@ -1,7 +1,7 @@
 html,
 body {
 	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    height: 100%;
+  height: 100%;
 }
 .navbar {
   margin-bottom: 10px;
@@ -69,4 +69,18 @@ body {
 
 .user-row-edit input {
 	width: 100px;
+}
+
+.tweet .date-padge {
+	color: #657786;
+	font-size: 12px;
+}
+
+.tweet .username-padge {
+	margin-right: 5px;
+}
+
+.tweet .footer-link {
+	margin-left: 100px;
+	display: inline-block;
 }
