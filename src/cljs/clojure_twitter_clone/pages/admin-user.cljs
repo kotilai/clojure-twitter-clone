@@ -1,7 +1,8 @@
 (ns clojure-twitter-clone.pages.admin-user
   (:require [reagent.core :as r]
             [reagent-forms.core :refer [bind-fields]]
-            [ajax.core :refer [GET POST PUT DELETE]]))
+            [ajax.core :refer [GET POST PUT DELETE]]
+            [clojure-twitter-clone.utils.url :as url]))
 
 (defn fetch-user [username user]
  (GET (str "/admin/user/" username)
@@ -13,7 +14,7 @@
                                            :email
                                            :admin
                                            :is_active]))}))
-                                           
+
 (defn create-user [user]
  (POST "/admin/user"
    {:params user}))
@@ -27,13 +28,7 @@
    {:params id}))
 
 (defn cancel-user-edit []
- (set! (.-hash js/window.location) "/admin"))
-
-(defn get-url-param []
-  (->
-    (.-hash js/window.location)
-    (clojure.string/split #"/")
-    last))
+ (url/change-to-url "/admin"))
 
 (defn build-form [save delete]
   [:form {:autoComplete "off"}
@@ -84,7 +79,7 @@
       [bind-fields form-template user]]))
 
 (defn edit-page []
-  (let [username (get-url-param)
+  (let [username (url/get-url-param)
         user (r/atom nil)]
     (fetch-user username user)
     (fn []
