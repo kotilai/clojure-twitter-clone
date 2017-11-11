@@ -4,6 +4,9 @@
             [ajax.core :refer [GET POST PUT DELETE]]
             [clojure-twitter-clone.utils.url :as url]))
 
+(defn return-from-edit []
+ (url/change-to-url "/admin"))
+
 (defn fetch-user [username user]
  (GET (str "/admin/user/" username)
    {:headers {"Accept" "application/transit+json"}
@@ -17,18 +20,17 @@
 
 (defn create-user [user]
  (POST "/admin/user"
-   {:params user}))
+   {:params user
+    :handler return-from-edit}))
 
 (defn update-user [user]
  (PUT "/admin/user"
-   {:params user}))
+   {:params user
+    :handler return-from-edit}))
 
 (defn delete-user [id]
- (DELETE "/admin/user"
-   {:params id}))
-
-(defn cancel-user-edit []
- (url/change-to-url "/admin"))
+ (DELETE (str "/admin/user/" id)
+   {:handler return-from-edit}))
 
 (defn build-form [save delete]
   [:form {:autoComplete "off"}
@@ -65,14 +67,13 @@
           {:on-click delete}
           "Remove"]
         [:button.btn.btn-outline-secondary
-          {:on-click cancel-user-edit}
+          {:on-click return-from-edit}
           "Cancel"]]]])
 
-(defn user-form [user]
-  (let [editing? (contains? @user :id)
-        [save delete title] (if editing?
-                              [#(update-user @user) #(delete-user (:id @user)) "Edit user"]
-                              [#(create-user @user) cancel-user-edit "Create user"])
+(defn user-form [user editing?]
+  (let [[save delete title] (if editing?
+          [#(update-user @user) #(delete-user (:id @user)) "Edit user"]
+          [#(create-user @user) return-from-edit "Create user"])
         form-template (build-form save delete)]
     [:div.container
       [:h1 title]
@@ -83,7 +84,7 @@
         user (r/atom nil)]
     (fetch-user username user)
     (fn []
-      [user-form user])))
+      [user-form user true])))
 
 (defn new-page []
   (let [user (r/atom {:username nil
@@ -93,4 +94,4 @@
                       :admin false
                       :is_active true})]
     (fn []
-      [user-form user])))
+      [user-form user false])))

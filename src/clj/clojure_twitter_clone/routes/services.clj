@@ -130,28 +130,30 @@
     (context "/admin" []
       (GET "/users" []
         :return       [User]
-        :summary      "Returns all users"
+        :summary      "Returns all users."
         (ok (get-all-users)))
 
       (GET "/user/:username" [username]
         :return       User
-        :summary      "Returns a user"
+        :summary      "Returns a user."
         (ok (get-user {:username username})))
 
       (POST "/user" []
         :body [user User]
         :return       User
-        :summary      "Create a user"
+        :summary      "Create a user."
         (ok (create-user user)))
 
       (PUT "/user" []
         :body [user User]
         :return       User
-        :summary      "Update a user"
+        :summary      "Update a user."
         (ok (update-user user)))
 
-      (DELETE "/user" []
-        :body [id Long]
-        :summary      "Delete a user"
-        (ok (delete-user id)))
+      (DELETE "/user/:id" []
+        :path-params [id :- Long]
+        :summary      "Delete a user."
+        (do
+          (delete-user id)
+          (ok)))
       ))
