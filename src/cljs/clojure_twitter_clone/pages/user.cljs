@@ -36,8 +36,8 @@
         save #(create-tweet username {:text %} add)]
     (fetch-user-tweets username tweets)
     (fn []
-        [:div.container
-          [new-tweet username]
-          (for [t @tweets]
-            ^{:key (:id t)}
-            [tweet/tweet t])])))
+      [:div.container
+        [new-tweet save username]
+        (for [t (reverse (sort-by :posted_date @tweets))]
+          ^{:key (:id t)}
+          [tweet/tweet t])])))
