@@ -10,13 +10,13 @@
    {:headers {"Accept" "application/transit+json"}
     :handler #(reset! result %)}))
 
-(defn create-tweet [username tweet]
+(defn create-tweet [username tweet handler]
  (POST (str "/api/" username)
-   {:params tweet}))
+   {:params tweet
+    :handler handler}))
 
-(defn new-tweet [username]
-  (let [text (r/atom nil)
-        save #(create-tweet username {:text @text})]
+(defn new-tweet [save username]
+  (let [text (r/atom nil)]
     (fn []
       [:form
         [:div.form-group
@@ -26,12 +26,14 @@
             :cols 80
             :on-change #(reset! text (-> % .-target .-value))}]]
           [:button.btn.btn-outline-success
-            {:on-click save}
+            {:on-click #(save @text)}
             "Post"]])))
 
 (defn user-page []
   (let [username (url/get-url-param)
-        tweets (r/atom nil)]
+        tweets (r/atom nil)
+        add #(swap! tweets conj %)
+        save #(create-tweet username {:text %} add)]
     (fetch-user-tweets username tweets)
     (fn []
         [:div.container
