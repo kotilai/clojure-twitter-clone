@@ -36,3 +36,33 @@
     (for [t (reverse (sort-by :posted_date tweets))]
       ^{:key (:id t)}
       [tweet t])])
+
+      ; <div class="t">
+      ;   <div class="t-body">
+      ;     <div class="left">
+      ;       <div class="t-avatar">fff</div>
+      ;     </div>
+      ;     <div class="right">
+      ;       <div class="t-heading">John</div>
+      ;       <div class="t-content">abc</div>
+      ;       <div class="t-footer">1 2 3</div>
+      ;     </div>
+      ;   </div>
+      ; </div>
+      ;
+      ; .t-body {
+      ;   display: flex;
+      ; }
+      ;
+      ; .t-body .left {
+      ;   flex: 0 0 58px;
+      ; }
+      ;
+      ; .t-body .right {
+      ;   flex: 1 100%;
+      ; }
+      ;
+      ;
+      ; .t-avatar {
+      ;
+      ; }
