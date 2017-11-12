@@ -14,6 +14,4 @@
     (fetch-recent-tweets tweets)
     (fn []
         [:div.container
-        (for [t @tweets]
-          ^{:key (:id t)}
-          [tweet/tweet t])])))
+          [tweet/tweet-list @tweets]])))

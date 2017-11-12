@@ -22,7 +22,7 @@
   (let [username (:username content)
         date (:posted_date content)]
   [:div.tweet.card
-    [:div.card-body
+    [:div.card-block
       [:div.card-title
         [username-padge username]
         [date-padge date]]
@@ -30,3 +30,9 @@
       [footer-link "fa fa-reply" "#"]
       [footer-link "fa fa-refresh" "#"]
       [footer-link "fa fa-heart-o" "#"]]]))
+
+(defn tweet-list [tweets]
+  [:div.tweet-list
+    (for [t (reverse (sort-by :posted_date tweets))]
+      ^{:key (:id t)}
+      [tweet t])])

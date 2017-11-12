@@ -38,6 +38,4 @@
     (fn []
       [:div.container
         [new-tweet save username]
-        (for [t (reverse (sort-by :posted_date @tweets))]
-          ^{:key (:id t)}
-          [tweet/tweet t])])))
+        [tweet/tweet-list @tweets]])))

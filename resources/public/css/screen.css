@@ -71,6 +71,12 @@ body {
 	width: 100px;
 }
 
+.tweet-list {
+	width: 600px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
 .tweet .date-padge {
 	color: #657786;
 	font-size: 12px;
