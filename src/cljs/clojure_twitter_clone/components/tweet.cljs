@@ -16,53 +16,28 @@
 (defn footer-link [class uri]
   [:div.footer-link
     [:a {:class class
-         :href uri}]])
+         :href uri}]
+    [:span "1"]])
 
 (defn tweet [content]
   (let [username (:username content)
         date (:posted_date content)]
-  [:div.tweet.card
-    [:div.card-block
-      [:div.card-title
+  [:div.tweet
+    [:div.body-left
+      [:div.avatar [:i {:class "fa fa-user-circle"}]]]
+    [:div.body-right
+      [:div.header
         [username-padge username]
         [date-padge date]]
-      [:p.card-text (:text content)]
-      [footer-link "fa fa-reply" "#"]
-      [footer-link "fa fa-refresh" "#"]
-      [footer-link "fa fa-heart-o" "#"]]]))
+      [:div.content
+        [:p (:text content)]]
+      [:div.footer
+        [footer-link "fa fa-reply" "#"]
+        [footer-link "fa fa-refresh" "#"]
+        [footer-link "fa fa-heart-o" "#"]]]]))
 
 (defn tweet-list [tweets]
   [:div.tweet-list
     (for [t (reverse (sort-by :posted_date tweets))]
       ^{:key (:id t)}
       [tweet t])])
-
-      ; <div class="t">
-      ;   <div class="t-body">
-      ;     <div class="left">
-      ;       <div class="t-avatar">fff</div>
-      ;     </div>
-      ;     <div class="right">
-      ;       <div class="t-heading">John</div>
-      ;       <div class="t-content">abc</div>
-      ;       <div class="t-footer">1 2 3</div>
-      ;     </div>
-      ;   </div>
-      ; </div>
-      ;
-      ; .t-body {
-      ;   display: flex;
-      ; }
-      ;
-      ; .t-body .left {
-      ;   flex: 0 0 58px;
-      ; }
-      ;
-      ; .t-body .right {
-      ;   flex: 1 100%;
-      ; }
-      ;
-      ;
-      ; .t-avatar {
-      ;
-      ; }
