@@ -75,7 +75,7 @@ WHERE username = :username
 -- :name get-recent-tweets :? :*
 -- :doc retrieve 10 most recent tweets.
 SELECT * FROM tweet
-ORDER BY id ASC
+ORDER BY posted_date DESC
 LIMIT 10
 
 -- :name delete-tweet! :! :n
