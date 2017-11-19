@@ -1,11 +1,8 @@
 (ns clojure-twitter-clone.components.tweet
-  (:require [reagent.format :as format]))
-
-(defn format-date [date]
-  (format/date-format date "dd.MM.yyyy HH:mm:ss"))
+  (:require [clojure-twitter-clone.utils.date :as date-util]))
 
 (defn date-padge [date]
-  (let [formatted (format-date date)]
+  (let [formatted (date-util/time-ago date)]
     [:span.date-padge formatted]))
 
 (defn username-padge [username]
