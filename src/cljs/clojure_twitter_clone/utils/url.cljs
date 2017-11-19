@@ -4,7 +4,6 @@
   (->
     (.-hash js/window.location)
     (set! url)))
-  ;(set! (.-hash js/window.location) url))
 
 (defn get-url-param []
   (->
